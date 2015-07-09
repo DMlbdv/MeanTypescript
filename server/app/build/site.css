@@ -1,0 +1,61 @@
+.center {
+    text-align: center;
+}
+.myAlert {
+    padding: 5px;
+    margin-bottom: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+th label {
+    margin-bottom: 0;
+    -moz-min-width: 180px;
+    -ms-min-width: 180px;
+    -o-min-width: 180px;
+    -webkit-min-width: 180px;
+    min-width: 180px;
+    padding: 0 0 0 0;
+}
+
+.navbar-brand .mine { !important;
+    height: 60px;
+    padding: 0 15px 0 15px;
+}
+.svg {
+    /*width:800px;
+    height:400px;*/
+    overflow: visible;
+    position: absolute;
+}
+
+.btn-sm.pad {
+    margin-bottom: 10px;
+}
+
+.margin-left {
+    margin-left: 16px;
+}
+
+.toast-top-center {
+    top: 12px;
+    left: 50%;
+    margin-left: -150px;
+}
+
+@media all and (max-width: 240px) {
+    .toast-top-center {
+        margin-left: -54px;
+    }
+}
+
+@media all and (min-width: 241px) and (max-width: 320px) {
+    .toast-top-center {
+        margin-left: -64px;
+    }
+}
+
+@media all and (min-width: 321px) and (max-width: 480px) {
+    .toast-top-center {
+        margin-left: -96px;
+    }
+}

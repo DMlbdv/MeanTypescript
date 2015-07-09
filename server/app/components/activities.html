@@ -1,0 +1,65 @@
+﻿<div class="masthead">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="form-horizontal row">
+                <div class="col-md-10 form-group" style="padding-bottom: 10px;">
+                    <label for="work">Search Issues:</label>
+
+                    <div class="input-group">
+                        <input type="text" ng-model="vm.searchTextWork" ng-change="vm.searchWork()" class="form-control"
+                               placeholder="Search for issues..." id="work" ng-disabled="vm.workSuccess" name="work">
+
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.clearWork($event)" tabindex="-1">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-10 form-group" style="padding-bottom: 10px;">
+                    <label for="order">Search Jobs:</label>
+
+                    <div class="input-group">
+                        <input type="text" ng-model="vm.searchTextOrders" ng-change="vm.searchOrders()"
+                               class="form-control"
+                               placeholder="Search for jobs..." id="order" ng-disabled="vm.orderSuccess" name="order">
+
+                        <div class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-click="vm.clearOrder($event)"
+                                    tabindex="-1">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <!--<label for="fred" class="control-label"></label>
+                    <input type="text" name="fred" id="fred" ng-model="" ng-minlength="" ng-maxlength=""  class="form-control" />
+                    <div ng-messages=".name.$error" ng-if=".$submitted || .name.$touched">
+                        <div ng-message="required" class="alert alert-danger">Name is required</div>
+                        <div ng-message="minlength" class="alert alert-danger">Name must be at least  characters.</div>
+                    </div>-->
+                </div>
+                <!--                <div class="col-md-10 form-group">
+                                    <label for="technicians">Technician:</label>
+                                    <div class="input-group">
+                                        <input type="text" name="technicians" id="technicians" ng-model="vm.technician"
+                                               typeahead="technician as technician.fullName for technician in vm.technicians | filter:{name: $viewValue} | limitTo: 8"
+                                               typeahead-loading="vm.loadingTechnicians" class="form-control"
+                                               typeahead-on-select='vm.onSelect($item, $model, $label)'
+                                               ng-disabled="vm.techniciansDisabled">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-default" ng-click="vm.clearTechnician($event)"
+                                                    tabindex="-1">
+                                                <i class="glyphicon glyphicon-remove"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>-->
+            </div>
+        </div>
+    </div>
+    <div ui-grid="vm.activitiesOptions" id="activities">
+    </div>
+
+</div>

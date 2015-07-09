@@ -1,0 +1,56 @@
+{
+  "versions": {
+    "cfg": "0.0.0",
+    "pkg": "0.0.0"
+  },
+  "environment": "development",
+  "operatingSystem": "windows",
+  "operatingSystemComment": "One of: 'windows', 'mac', 'linux'",
+  "forever": 0,
+  "foreverOptions": {
+    "logfile": "forever.log"
+  },
+  "app": {
+    "name": "activityTracking",
+    "title": "ActivityTracking"
+  },
+  "platform": "",
+  "domain": "localhost",
+  "server":"localhost",
+  "scheme": "http",
+  "port": 3000,
+  "isSSL": false,
+  "httpPort": 3002,
+  "httpRedirectPort": 3000,
+  "socketIOEnabled": false,
+  "socketPort": 3000,
+  "serverPath": "/",
+  "appPath": "/",
+  "staticFilePath": "app",
+  "staticPath": "app",
+  "cors": {
+    "domains": [
+      "localhost"
+    ],
+    "frontendUseCors": 1
+  },
+    "databaseUrl": "localhost",
+    "databasePortNumber": 27017,
+    "databaseName": "activityTracking",
+    "username": "",
+    "password": "",
+    "initialized": true,
+    "dbIsSSL": "true",
+  "logKey": "dev",
+  "cookie": {
+    "secret": "o@:&M<ZN PF(s.T)3?*;^1~TDjNE}=3xy$SpB7dE%dA-}fAn.b[RRU{cg+P#[):/"
+  },
+  "ssl": {
+    "enabled": false,
+    "key": "key.pem",
+    "certificate": "certificate.pem",
+    "keyFile":"key.pem",
+    "certFile":"certificate.pem",
+    "ca": []
+  }
+}

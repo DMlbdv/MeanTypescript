@@ -1,0 +1,75 @@
+<div class="container" ng-class="{veil:loading}">
+    <form name="activityForm">
+        <div ng-hide="loading">
+            <div class="row col-md-7 ">
+                <div class="form-group">
+                    <label for="technicians">Technician:</label>
+                    <input type="text" name="technicians" id="technicians" ng-model="vm.activity.technician"
+                           typeahead="technician as technician.fullName for technician in vm.technicians | filter:{fullName: $viewValue} | limitTo: 8" typeahead-loading="Loading" class="form-control"
+                            required ng-disabled="vm.another">
+                </div>
+                <div ng-messages="activityForm.technicians.$error">
+                    <div ng-message="required" class="alert alert-warning">Technician is required</div>
+                </div>
+            </div>
+            <div class="row col-md-7 ">
+                <label>Work Date:</label>
+                <div class="input-group">
+                    <input type="text" id="workDate" name="workDate" class="form-control" datepicker-popup="{{vm.format}}"
+                           ng-model="vm.activity.workDate" min-date="vm.minDate" max-date="vm.maxDate" datepicker-options="vm.dateOptions" required close-text="Close" />
+                    <span class="input-group-btn">
+                        <button type="button" class="btn btn-default" ng-click="open($event)" tabindex="-1"><i class="glyphicon glyphicon-calendar"></i></button>
+                    </span>
+                </div>
+                <div ng-messages="activityForm.workDate.$error">
+                    <div ng-message="required" class="alert alert-warning">Work Date is required</div>
+                </div>
+            </div>
+            <div class="row col-md-7 ">
+                <div class="form-group">
+                    <label>Order Worked:</label>
+                    <input type="text" id="orderWorked" name="orderWorked" class="form-control" ng-model="vm.activity.ordersWorked" required order-number-validator ng-model-options="{updateOn:'blur'}" ng-readonly="activityForm.orderWorked.$valid" />
+                </div>
+                <div ng-messages="activityForm.orderWorked.$error">
+                    <div ng-message="required" class="alert alert-warning">Order Number is required</div>
+                    <div ng-message="validOrderNumber" class="alert alert-warning">Not a valid order number</div>
+
+                </div>
+                <div ng-if="activityForm.orderWorked.$pending">
+                    Checking Order Number..
+                </div>
+            </div>
+        </div>
+        <div class="row col-md-7 " ng-show="activityForm.orderWorked.$valid">
+            <div class="form-group">
+                <label>Hours Worked:</label>
+                <input type="text" id="hoursWorked" name="hoursWorked" class="form-control" ng-model="vm.activity.hoursWorked" required rate-or-cost-validator ng-model-options="{updateOn:'blur'}" />
+            </div>
+            <div ng-messages="activityForm.hoursWorked.$error">
+                <div ng-message="required" class="alert alert-warning">Hours Worked is required</div>
+                <div ng-message="rateorcost" class="alert alert-warning">Hours worked must be of the form ##.## where # is a number</div>
+            </div>
+        </div>
+        <div class="row col-md-7 " ng-show="activityForm.orderWorked.$valid">
+            <div class="form-group">
+                <label>Issues:</label>
+                <textarea rows="3" type="text" id="workPerformed" name="workPerformed" class="form-control" ng-model="vm.activity.workPerformed" placeholder="Enter any issues or comments.." required></textarea>
+            </div>
+            <div ng-messages="activityForm.workPerformed.$error">
+                <div ng-message="required" class="alert alert-warning">Work Performed is required</div>
+                            </div>
+        </div>
+        <div class="row col-md-7 " ng-show="activityForm.orderWorked.$valid">
+            <div class="form-group">
+                <label>Material Used:</label>
+                <textarea rows="3" type="text" class="form-control" ng-model="vm.activity.materialsUsed" placeholder="Enter the materials you used.."></textarea>
+            </div>
+        </div>
+
+        <div class="row col-md-7 ">
+            <button class="btn btn-primary" ng-click="vm.save($event)" ng-disabled="activityForm.$invalid" ng-show="activityForm.orderWorked.$valid" acceskey="s">Save</button>
+            <button class="btn btn-primary" ng-click="vm.save($event, true)" ng-disabled="activityForm.$invalid" ng-show="activityForm.orderWorked.$valid" accesskey="a">Save &amp; Another</button>
+            <button ng-click="vm.reset($event)" ng-disabled="activityForm.$pristine" class="btn btn-warning" ng-hide="loading" accesskey="r">Reset</button>
+        </div>
+    </form>
+</div>

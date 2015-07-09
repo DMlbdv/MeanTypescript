@@ -33,3 +33,5 @@ types/
 server/**.js
 server/**.js.map
 !/server/app/build/*.js
+
+node_modules

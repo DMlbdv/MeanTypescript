@@ -29,7 +29,6 @@ export class ApiRouter {
         this.connections = connections;
         this.prepareSchema(connections);
     }
-
     private prepareSchema(connections) {
         this.Schema = new schema.Schema((connections.connection));
         this.Schema.init();
@@ -38,7 +37,7 @@ export class ApiRouter {
         this.User = this.Schema.models.user;
         this.Project = this.Schema.models.project;
     }
-
+//TODO this is not unit testable need to break the routes into separate files and import via require
     prepareRoutes() {
         this.app = express();
         this.router = express.Router();
@@ -51,7 +50,6 @@ export class ApiRouter {
                 if (err) {
                     return res.send(err);
                 }
-
                 res.json(activities);
             });
         });
@@ -72,7 +70,6 @@ export class ApiRouter {
                     res.sendStatus(201);
                 }
             });
-
         });
 
         this.router.route('/validOrderNumber').post((req, res) => {
@@ -100,6 +97,3 @@ export class ApiRouter {
         return this.app;
     }
 }
-
-
-

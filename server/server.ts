@@ -92,7 +92,6 @@ export class Server {
         this.rootPath = rootPath;
         this.environment = process.env;
     }
-
     private allowCors(domains:string[]) {
         var allowAll = lodash.contains(domains, '*');
         // return CORS middleware bound to domains arg
@@ -124,7 +123,6 @@ export class Server {
             }
         };
     }
-
     startup(configuration:Database.DatabaseConfiguration) {
         var deferred = Q.defer();
         this.connection = new Database.Database().createConnection(configuration);
@@ -148,7 +146,6 @@ export class Server {
         });
         return deferred.promise;
     }
-
     private configureServer(configuration:ServerConfiguration, connection:mongoose.Connection) {
         var app = express();
         var listener;
@@ -181,7 +178,6 @@ export class Server {
         }
         // set app settings variables
         app.set('environment', configuration.environment);
-        //app.set('staticFilePath', staticFilePath);
         // load api
         var ret:Connections = {
             application: app,
@@ -192,7 +188,7 @@ export class Server {
 
         var api = new apiRouter.ApiRouter(configuration, ret);
         app.use(api.prepareRoutes());
-        var mr = new router.MainRouter(configuration).start();
+        var mr = new router.MainRouter().start();
         app.use('/', mr);
         if (this.environment.toString() === 'development') {
             app.use(errorHandler({dumpExceptions: true, showStack: true}));
@@ -202,15 +198,12 @@ export class Server {
         this.listen(this.defaultListenerCallback);
         return ret;
     }
-
     private defaultListenerCallback(configuration:ServerConfiguration) {
         var loc1 = 'http' + (configuration.isSSL ? 's' : '') + '://' + configuration.server + ':' + configuration.port.toString() + '/';
         console.log('Express server listening at ' + loc1 + ' in ' + configuration.environment + ' mode');
     }
-
     listen(callback:any) {
-        var port = process.env.PORT || this.configuration.port;		//for Heroku to work
-        //var env = this.cong.environment;
+        var port = process.env.PORT || this.configuration.port;
 
         callback = callback || this.defaultListenerCallback;
 
@@ -218,6 +211,5 @@ export class Server {
             callback(this.configuration);
         });
     }
-
 }
 

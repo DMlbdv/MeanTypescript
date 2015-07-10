@@ -2,7 +2,6 @@
 /// <reference path="types/Q.d.ts" />
 
 import server = require('./server/server');
-import database = require('./server/database/database');
 var appServer:any;
 var configFile = './server/config/config.json';
 

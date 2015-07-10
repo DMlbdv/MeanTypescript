@@ -45,7 +45,7 @@ describe('server tests', function () {
 
     });
 
-    it('should have a startup method that returns an object', function () {
+    it('should have a startup method returning an object', function () {
         var server = new Server.Server(serverConfig, dirName);
         var result = server.startup(databaseConfig);
         expect(result).not.to.be.null;

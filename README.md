@@ -1,11 +1,14 @@
 # MeanTypescript
-Mean (Mongo, Angular, Express Node) Stack in Typescript, Angular files are currently not typescript. 
+Mean (Mongo, Angular, Express Node) Stack in Typescript. 
+This a simplified version of a production app I wrote for my company.
 
-All server side is.
-There are multiple versions of this app here the original [Here](https://github.com/mgbee8/activity_tracker_original).
-This is angular/ OData backend (because I could) demonstrated validation in Angular 1.3 etc.
+There are multiple versions of this app.
+The original is [here](https://github.com/mgbee8/activity_tracker_original).
+This is AngularJS with OData backend (because I could). Application demonstrates validation in Angular 1.3 etc.
 
 A MEAN version in [Javascript](https://github.com/mgbee8/activity_tracking).
 
-and now a typescript MEAN version
+And now a typescript MEAN version in this repository. Next steps will be to make the node backend and angularjs app more unit testable.
+
+
 

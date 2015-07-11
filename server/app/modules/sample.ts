@@ -185,7 +185,6 @@ module myApp.services {
 
                 return $http.get('/api/activities', ps, cp, stw, sto, technicianId);
             }
-
             function validateOrderNumber(orderNumber) {
                 var deferred = $q.defer();
                 $http.post(url + '/api/validordernumber', {orderNumber: orderNumber})
@@ -199,89 +198,17 @@ module myApp.services {
                     });
                 return deferred.promise;
             }
-
             function getTechnicians() {
                 return $http.get(url + '/api/technicians');
             }
-
             function saveActivity(activity) {
                 activity.workDate = moment(activity.workDate).format();
                 var toSend = JSON.stringify(activity);
                 return $http({url: datacontext.url + '/api/activities', method: 'POST', data: toSend});
 
             }
-
             return datacontext;
         }
-
-        /*    .factory('datacontext', ['$http', '$location', '$q', function ($http, $location, $q) {
-         var url = $location.$$protocol + '://' + $location.$$host + ($location.$$port !== null ? ':' + $location.$$port : '');
-         var datacontext = {
-         url: url,
-         getActivitiesListPaged: getActivitiesListPaged,
-         validateOrderNumber: validateOrderNumber,
-         getTechnicians: getTechnicians,
-         saveActivity: saveActivity,
-         newActivity: newActivity
-         };
-
-         function newActivity(another, scope) {
-         var retval = {};
-         retval.technician = another ? scope.activity.technician : '';
-         retval.workDate = new Date();
-         retval.ordersWorked = null;
-         retval.workPerformed = null;
-         retval.hoursWorked = null;
-         retval.materialsUsed = null;
-         return retval;
-         }
-
-         function getActivitiesListPaged(pageSize, currentPage, searchTextWork, searchTextOrders, technicianId) {
-         var ps = pageSize === 0 ? 20 : (pageSize === null ? 10 : pageSize);
-         var cp;
-         switch (currentPage) {
-         case null:
-         cp = 1;
-         break;
-         case undefined:
-         cp = 1;
-         break;
-         default:
-         cp = currentPage;
-         }
-         var stw = searchTextWork === null ? '' : (searchTextWork === undefined ? '' : searchTextWork);
-         var sto = searchTextOrders === null ? '' : (searchTextOrders === undefined ? '' : searchTextOrders);
-
-         return $http.get('/api/activities', ps, cp, stw, sto, technicianId);
-         }
-
-         function validateOrderNumber(orderNumber) {
-         var deferred = $q.defer();
-         $http.post(url + '/api/validOrderNumber', {orderNumber: orderNumber})
-         .success(function (data) {
-         deferred.resolve({
-         result: data.result
-         });
-         })
-         .error(function (error) {
-         deferred.reject(error);
-         });
-         return deferred.promise;
-         }
-
-         function getTechnicians() {
-         return $http.get(url + '/api/technicians');
-         }
-
-         function saveActivity(activity) {
-         activity.workDate = moment(activity.workDate).format();
-         var toSend = JSON.stringify(activity);
-         return $http({url: datacontext.url + '/api/activities', method: 'POST', data: toSend});
-
-         }
-
-         return datacontext;
-         }])*/
     }
     myApp.registerService('datacontext', datacontext);
 }
@@ -309,7 +236,6 @@ module myApp.controllers {
         url: string;
         description: string;
     }
-
     export interface IActivity {
         technician: string;
         workDate: Date;
@@ -318,7 +244,6 @@ module myApp.controllers {
         materialsUsed: string;
         hoursWorked: number;
     }
-
     export class Activity implements IActivity {
         technician:string;
         workDate:Date;
@@ -327,7 +252,6 @@ module myApp.controllers {
         materialsUsed:string;
         hoursWorked:number;
     }
-
     export interface ITechnician {
         id : string;
         firstName : string;
@@ -337,11 +261,9 @@ module myApp.controllers {
         isActive : boolean;
 
     }
-
     export class RouteCtrl implements IController {
         static $inject = ['$route'];
         private routes:MyRoutes[];
-
         constructor($route:ng.route.IRouteService) {
             var vm:any = this;
             vm.routes = [];
@@ -357,7 +279,6 @@ module myApp.controllers {
             });
         }
     }
-
     export class AddActivityCtrl implements IController {
         static $inject = ['datacontext'];
         private technicians:string[];
@@ -370,7 +291,6 @@ module myApp.controllers {
         private save:(event:any, another:boolean)=> void;
         private another:boolean;
         private format:string;
-
         constructor(datacontext) {
             var vm = this;
             vm.technicians = [];
@@ -386,8 +306,6 @@ module myApp.controllers {
                 formatYear: 'yy',
                 startingDay: 1,
                 initDate: moment()
-
-
             };
             vm.reset = function (event, another) {
                 if (event) {
@@ -414,52 +332,7 @@ module myApp.controllers {
             };
             vm.format = 'dd-MMM-yy';
         }
-
-        /*    .controller('AddActivityCtrl', ['datacontext', function (datacontext) {
-         var vm = this;
-         vm.technicians = [];
-         vm.loading = true;
-         vm.activity = datacontext.newActivity();
-         datacontext.getTechnicians().then(function (result) {
-         vm.technicians = [].concat(result.data);
-         vm.loading = false;
-         });
-         vm.minDate = moment().add(-7, 'days');
-         vm.maxDate = moment().add(1, 'days');
-         vm.dateOptions = {
-         formatYear: 'yy',
-         startingDay: 1,
-         initDate: moment()
-
-
-         };
-         vm.reset = function (event, another) {
-         if (event) {
-         event.preventDefault();
-         vm.activity = datacontext.newActivity();
-         }
-         if (another) {
-         vm.activity = datacontext.newActivity(another, $scope);
-         }
-         };
-         vm.save = function (event, another) {
-         event.stopPropagation();
-         datacontext.saveActivity(vm.activity).then(function (res) {
-         if (res.status === 201) {
-         toastr.info('Saved');
-         if (another) {
-         vm.reset(null, another);
-         vm.another = another;
-         } else {
-         vm.reset(event);
-         }
-         }
-         });
-         };
-         vm.format = 'dd-MMM-yy';
-         }])*/
     }
-
     export class ActivitiesCtrl implements IController {
         private loading:boolean;
         private pageOptions:any;
@@ -479,10 +352,7 @@ module myApp.controllers {
         private techniciansDisabled:boolean;
         private activitiesOptions:any;
         private getPagedDataAsync:(pageSize:number, page:number, searchTextWork:string, searchOrders:string, technicianId:number)=>void;
-
-
         static $inject = ['datacontext'];
-
         constructor(private datacontext) {
             var vm = this;
             vm.loading = false;
@@ -597,7 +467,6 @@ module myApp.controllers {
                         width: '30%',
                         headerCellClass: 'center'
                     }
-
                 ],
                 multiSelect: false,
                 enableColumnMenus: false,
@@ -610,157 +479,8 @@ module myApp.controllers {
                 paginationPageSize: 25
             };
             vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders, null);
-
         }
-
-        /*    .controller('ActivitiesCtrl', ['datacontext', function (datacontext) {
-         var vm = this;
-         vm.loading = false;
-         vm.pageOptions = {
-         pageSizes: [10, 20, 50],
-         pageSize: 20,
-         totalServerItems: 0,
-         currentPage: 1
-         };
-         vm.pageOptions.pageSize = 10;
-         var lastPage = vm.pageOptions.currentPage;
-         vm.totalServerItems = 0;
-         vm.activities = [];
-         vm.technicians = [];
-         vm.searchTextWork = '';
-         vm.searchTextOrders = '';
-         vm.orderSuccess = false;
-         vm.workSuccess = false;
-         vm.technician = null;
-         vm.technicianId = 0;
-         vm.clearWork = function (event) {
-         event.stopPropagation();
-         vm.searchTextWork = '';
-         vm.searchTextOrders = '';
-         vm.orderSuccess = false;
-         vm.techniciansDisabled = false;
-         vm.workSuccess = false;
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders, vm.technicianId);
-         };
-         vm.clearOrder = function (event) {
-         event.stopPropagation();
-         vm.searchTextWork = '';
-         vm.searchTextOrders = '';
-         vm.orderSuccess = false;
-         vm.techniciansDisabled = false;
-         vm.workSuccess = false;
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders, vm.technicianId);
-         };
-         vm.clearTechnician = function (event) {
-         event.stopPropagation();
-         vm.technician = undefined;
-         vm.orderSuccess = false;
-         vm.techniciansDisabled = false;
-         vm.technicianId = 0;
-         vm.workSuccess = false;
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders, vm.technicianId);
-         };
-         vm.onSelect = function ($item) {
-         vm.technicianId = $item.id;
-         vm.searchTextOrders = '';
-         vm.searchTextWork = '';
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders, vm.technicianId);
-         };
-         datacontext.getTechnicians().then(function (result) {
-         vm.technicians = [].concat(result.data);
-         });
-         vm.getPagedDataAsync = function (pageSize, page) {
-         datacontext.getActivitiesListPaged(pageSize, page, vm.searchTextWork, vm.searchTextOrders, vm.technicianId)
-         .then(function (data) {
-         vm.activities.length = 0;
-         vm.activities = [].concat(data.data);
-         vm.activitiesOptions.data = vm.activities;
-         vm.activitiesOptions.minRowsToShow = vm.activities.length;
-         vm.orderSuccess = false;
-         vm.techniciansDisabled = false;
-         vm.workSuccess = false;
-         })
-         .catch(function (err) {
-         console.log(err);
-         });
-         };
-         vm.activitiesOptions = {
-         data: [],
-         appScopeProvider: vm,
-         columnDefs: [
-         {
-         field: 'technician',
-         displayName: 'Technician',
-         width: '14%',
-         headerCellClass: 'center'
-         },
-         {
-         field: 'workDate',
-         displayName: 'Work Date',
-         cellFilter: 'date:"MM/dd/yyyy"',
-         width: '10%',
-         headerCellClass: 'center'
-         },
-         {
-         field: 'projectWorked',
-         displayName: 'Order Worked',
-         width: '8%',
-         headerCellClass: 'center'
-         },
-         {
-         field: 'hoursWorked',
-         displayName: 'Hours',
-         width: '8%',
-         headerCellClass: 'center'
-         },
-         {
-         field: 'workPerformed',
-         displayName: 'Work Performed/Issues',
-         width: '30%',
-         headerCellClass: 'center'
-         },
-         {
-         field: 'materialsUsed',
-         displayName: 'Materials',
-         width: '30%',
-         headerCellClass: 'center'
-         }
-
-         ],
-         multiSelect: false,
-         enableColumnMenus: false,
-         enableFiltering: false,
-         enablePaging: true,
-         showFooter: true,
-         enableSorting: false,
-         enableHiding: false,
-         paginationPageSizes: [25, 50, 75],
-         paginationPageSize: 25
-         };
-         function searchWork() {
-         if (vm.searchTextWork !== '') {
-         vm.orderSuccess = true;
-         vm.techniciansDisabled = true;
-         vm.searchTextOrders = '';
-         vm.technicianId = 0;
-         vm.technician = null;
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, null);
-         }
-         }
-         function searchOrders() {
-         if (vm.searchTextOrders !== '') {
-         vm.workSuccess = true;
-         vm.techniciansDisabled = true;
-         vm.searchTextWork = '';
-         vm.technicianId = 0;
-         vm.technician = null;
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, null, vm.searchTextOrders);
-         }
-         }
-         vm.getPagedDataAsync(vm.pageOptions.pageSize, vm.pageOptions.currentPage, vm.searchTextWork, vm.searchTextOrders);
-         }]) */
     }
-
     myApp.registerController('RouteCtrl', RouteCtrl);
     myApp.registerController('AddActivityCtrl', AddActivityCtrl);
     myApp.registerController('ActivitiesCtr', ActivitiesCtrl);
@@ -783,11 +503,10 @@ module myApp.directives {
                     }
 
                 };
-            }
+            };
             return this;
         }
     }
-
     interface IMyAttributes extends ng.IAttributes {
         validateRateOrCost: number;
     }
@@ -797,7 +516,6 @@ module myApp.directives {
     interface IMyNgModelController extends ng.INgModelController {
         $validators: IMyValidators;
     }
-
     interface IRateOrCostValidator {
         require:string;
         link:(scope:any, element:any, attrs:any, ngModel:any)=>any;
@@ -824,8 +542,3 @@ module myApp.directives {
     myApp.registerDirective('orderNumberValidator', orderNumberValidator);
     myApp.registerDirective('rateOrCostValidator', rateOrCostValidator);
 }
-
-
-
-
-

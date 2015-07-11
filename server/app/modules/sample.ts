@@ -8,15 +8,15 @@
 /// <reference path="../../../types/toastr/toastr.d.ts"/>
 
 /*interface MyModule {
-    name: string;
-    dependencies: string[];
-}
-var myModules:MyModule[] = [{name: 'myApp.controllers', dependencies: []}, {
-    name: 'myApp.directives',
-    dependencies: []
-}, {name: 'myApp.filters', dependencies: []}, {name: 'myApp.services', dependencies: []}];
-var toPush:string[] = [];
-myModules.forEach((myModule)=>(angular.module(myModule.name, myModule.dependencies), toPush.push(myModule.name)));*/
+ name: string;
+ dependencies: string[];
+ }
+ var myModules:MyModule[] = [{name: 'myApp.controllers', dependencies: []}, {
+ name: 'myApp.directives',
+ dependencies: []
+ }, {name: 'myApp.filters', dependencies: []}, {name: 'myApp.services', dependencies: []}];
+ var toPush:string[] = [];
+ myModules.forEach((myModule)=>(angular.module(myModule.name, myModule.dependencies), toPush.push(myModule.name)));*/
 var modules:string[] = ['ngRoute', 'ngSanitize', 'ngAnimate', 'ngCookies', 'ngMessages', 'ui.bootstrap', 'ui.grid'];
 //modules.concat(toPush);
 
@@ -76,7 +76,7 @@ module myApp {
     export interface IController {
     }
     export interface IDirective {
-        restrict: string;
+        require: string;
         link($scope:ng.IScope, element:JQuery, attrs:ng.IAttributes, ngModel:ng.INgModelController): any;
     }
     export interface IFilter {
@@ -91,10 +91,10 @@ module myApp {
      * @param className
      * @param services
      */
-    export function registerController(className:string, services = []) {
-        var controller = className;
-        services.push(myApp[className]);
-        angular.module('myApp').controller(controller, services);
+    export function registerController(name:string, func:any) {
+        var controller = func;
+        //services.push(myApp[className]);
+        angular.module('myApp').controller(name, controller);
     }
 
     /**
@@ -103,10 +103,10 @@ module myApp {
      * @param className
      * @param services
      */
-    export function registerFilter(className:string, services = []) {
-        var filter = className.toLowerCase();
-        services.push(() => (new myApp[className]()).filter);
-        angular.module('myApp').filter(filter, services);
+    export function registerFilter(name:string, func:any) {
+        /*        var filter = className.toLowerCase();
+         services.push(() => (new myApp[className]()).filter);*/
+        angular.module('myApp').filter(name, func);
     }
 
     /**
@@ -115,10 +115,10 @@ module myApp {
      * @param className
      * @param services
      */
-    export function registerDirective(className:string, services = []) {
-        var directive = className[0].toLowerCase() + className.slice(1);
-        services.push(() => new myApp[className]());
-        angular.module('myApp').directive(directive, services);
+    export function registerDirective(name:string, func:any) {
+        /*        var directive = className[0].toLowerCase() + className.slice(1);
+         services.push(() => new myApp[className]());*/
+        angular.module('myApp').directive(name, func);
     }
 
     /**
@@ -127,17 +127,15 @@ module myApp {
      * @param className
      * @param services
      */
-    export function registerService(className:string, services = []) {
-        var service = className[0].toLowerCase() + className.slice(1);
-        services.push(() => new myApp[className]());
-        angular.module('myApp').factory(service, services);
+    export function registerService(name:string, func:any) {
+        /*        var service = className[0].toLowerCase() + className.slice(1);
+         services.push(() => new myApp[className]());*/
+        angular.module('myApp').factory(name, func);
     }
 }
 module myApp.services {
     export class datacontext implements IService {
-
         static $inject = ['$http', '$location', '$q'];
-
         constructor($http, $location, $q) {
             var url = $location.$$protocol + '://' + $location.$$host + ($location.$$port !== null ? ':' + $location.$$port : '');
             var datacontext = {
@@ -146,8 +144,17 @@ module myApp.services {
                 validateOrderNumber: validateOrderNumber,
                 getTechnicians: getTechnicians,
                 saveActivity: saveActivity,
-                newActivity: newActivity
+                newActivity: newActivity,
+                emptyOrderNumber: emptyOrderNumber
             };
+
+            function emptyOrderNumber() {
+                var deferred = $q.defer();
+                setTimeout(function () {
+                    deferred.resolve(true);
+                }, 1000);
+                return deferred.promise;
+            }
 
             function newActivity(another:boolean, scope:myApp.controllers.AddActivityCtrl) {
                 var retval:myApp.controllers.IActivity = new myApp.controllers.Activity();
@@ -181,7 +188,7 @@ module myApp.services {
 
             function validateOrderNumber(orderNumber) {
                 var deferred = $q.defer();
-                $http.post(url + '/api/validOrderNumber', {orderNumber: orderNumber})
+                $http.post(url + '/api/validordernumber', {orderNumber: orderNumber})
                     .success(function (data) {
                         deferred.resolve({
                             result: data.result
@@ -276,23 +283,25 @@ module myApp.services {
          return datacontext;
          }])*/
     }
+    myApp.registerService('datacontext', datacontext);
 }
 
 module myApp.filters {
-    export class sprintf implements IFilter {
-        filter() {
-            function parse(str:string, ...args:any[]) {
-                var i = 0;
-                return str.replace(/%s/g, function () {
-                    return args[i++];
-                });
-            }
+    function parse(str:string, ...args:any[]) {
+        var i = 0;
+        return str.replace(/%s/g, function () {
+            return args[i++];
+        });
+    }
 
-            return function (str:string) {
-                return parse(str, arguments[1], arguments[2], arguments[3], arguments[4], arguments[5]);
+    export class sprintf {
+        constructor() {
+            return function (str:string, ...args:any[]) {
+                return parse(str, args);
             }
         }
     }
+    myApp.registerFilter('sprintf', sprintf);
 }
 
 module myApp.controllers {
@@ -752,21 +761,30 @@ module myApp.controllers {
          }]) */
     }
 
-
+    myApp.registerController('RouteCtrl', RouteCtrl);
+    myApp.registerController('AddActivityCtrl', AddActivityCtrl);
+    myApp.registerController('ActivitiesCtr', ActivitiesCtrl);
 }
 
 module myApp.directives {
     export class orderNumberValidator implements IDirective {
         static $inject = ['datacontext'];
-        restrict = 'ngModel';
-        link = function (scope, elem, attr, ngModel) {
-            ngModel.$asyncValidators.validOrderNumber = function (modelValue, viewValue) {
-                var val = modelValue || viewValue;
-                return this.datacontext.validateOrderNumber(val);
-            };
-        };
-
+        require:string;
+        link:(p1:any, p2:any, p3:any, p4:any)=> any;
         constructor(private datacontext) {
+            this.require = 'ngModel';
+            this.link = function (scope, elem, attr, ngModel) {
+                ngModel.$asyncValidators.validOrderNumber = function (modelValue, viewValue) {
+                    var val = modelValue || viewValue;
+                    if (val.length === 6) {
+                        return this.datacontext.validateOrderNumber(val);
+                    } else if (val === '0') {
+                        return datacontext.emptyOrderNumber();
+                    }
+
+                };
+            }
+            return this;
         }
     }
 
@@ -776,34 +794,38 @@ module myApp.directives {
     interface IMyValidators extends ng.IModelValidators {
         rateorcost:any
     }
-    interface IMyNgModelController extends ng.INgModelController{
+    interface IMyNgModelController extends ng.INgModelController {
         $validators: IMyValidators;
     }
-    export class rateOrCostValidator implements IDirective {
-        static $inject = ['$filter'];
-        restrict = 'ngModel';
 
-        link($scope:ng.IScope, element:JQuery, attrs:IMyAttributes, ngModel:IMyNgModelController):any {
-            var pctPattern:RegExp;
-            var len = attrs.validateRateOrCost ? attrs.validateRateOrCost : 2;
-            var fString = this.$filter('sprintf')('^(\\d*([.]\\d{0,%s})?|^\\d([.]\\d{2})|^\\d([.]\\d{1})?)$', len);
-            pctPattern = new RegExp(fString);
-            ngModel.$validators.rateorcost = function (modelValue, viewValue) {
-                var value = modelValue || viewValue;
-                return pctPattern.test(value);
-            };
-        }
-
-        constructor(private $filter) {
-        }
-
+    interface IRateOrCostValidator {
+        require:string;
+        link:(scope:any, element:any, attrs:any, ngModel:any)=>any;
     }
+    export class rateOrCostValidator implements IRateOrCostValidator {
+        require:string;
+        link:(p1:any, p2:any, p3:any, p4:any)=> any;
+        static $inject = ['$filter'];
+        constructor(private $filter) {
+            this.require = 'ngModel';
+            this.link = function ($scope, element, attrs, ngModel) {
+                var pctPattern;
+                var len = attrs.validateRateOrCost ? attrs.validateRateOrCost : 2;
+                var fString = this.$filter('sprintf')('^(\\d*([.]\\d{0,%s})?|^\\d([.]\\d{2})|^\\d([.]\\d{1})?)$', len);
+                pctPattern = new RegExp(fString);
+                ngModel.$validators.rateorcost = function (modelValue, viewValue) {
+                    var value = modelValue || viewValue;
+                    return pctPattern.test(value);
+                };
+            };
+            return this;
+        }
+    }
+    myApp.registerDirective('orderNumberValidator', orderNumberValidator);
+    myApp.registerDirective('rateOrCostValidator', rateOrCostValidator);
 }
 
-myApp.registerService('datacontext');
-myApp.registerFilter('sprintf');
-myApp.registerDirective('orderNumberValidator');
-myApp.registerDirective('rateOrCostValidator');
-myApp.registerController('RouteCtrl');
-myApp.registerController('AddActivityCtrl');
-myApp.registerController('ActivitiesCtrl');
+
+
+
+

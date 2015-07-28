@@ -4,7 +4,7 @@ var gulp = require ('gulp'),
     config = require ('./config/config'),
     del = require ('del'),
     vinylPaths = require ('vinyl-paths'),
-    // runSequence = require ('run-sequence'),
+    runSequence = require ('run-sequence'),
     fs = require ('fs');
 
 //------------------------------------------------------------------------------
@@ -43,11 +43,16 @@ gulp.task('typescript', function() {
 // ------------------------------------------------------------------------------
 
 
-// gulp.task('build', function(cb) {
-//   var sequence;
-//   sequence = ['clean', ['vendor-js', 'vendor-css', 'vendor-etc', 'scripts', 'jade', 'jsons', 'images', 'public', 'stylus', 'index'], cb];
-//   return runSequence.apply(null, sequence);
-// });
+gulp.task('build', function(cb) {
+  var sequence;
+  sequence = ['clean', ['typescript'], cb];
+  return runSequence.apply(null, sequence);
+});
 
 
-gulp.task('default', ['clean', 'typescript']);
+gulp.task ('watch', function (cb) {});
+
+
+gulp.task('default', function(){
+    return runSequence ('build', ['watch'])
+});

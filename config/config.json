@@ -1,0 +1,11 @@
+{
+    "client": {
+        "src":{
+            "ts": "client/src/ts"
+        },
+        "build": {
+            "root": "client/build",
+            "js": "client/build/js"
+        }
+    }
+}

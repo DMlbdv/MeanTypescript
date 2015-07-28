@@ -1,7 +1,8 @@
 {
     "client": {
         "src":{
-            "ts": "client/src/ts"
+            "ts": "client/src/ts",
+            "jade": "client/src/jade"
         },
         "build": {
             "root": "client/build",

@@ -13,7 +13,10 @@ var gulp            = require ('gulp'),
     notify          = require('gulp-notify'),
     jade            = require('gulp-jade'),
     size            = require('gulp-size'),
-    fs              = require ('fs');
+    fs              = require ('fs'),
+    sass            = require('gulp-sass'),
+    sourcemaps      = require('gulp-sourcemaps'),
+    autoprefixer    = require('gulp-autoprefixer');
 
 // ------------------------------------------------------------------------------
 // Custom vars and methods
@@ -76,24 +79,20 @@ gulp.task('jade', function() {
 });
 
 
-  // var gulp         = require('gulp');
-  // var browserSync  = require('browser-sync');
-  // var sass         = require('gulp-sass');
-  // var sourcemaps   = require('gulp-sourcemaps');
-  // var handleErrors = require('../util/handleErrors');
-  // var config       = require('../config').sass;
-  // var autoprefixer = require('gulp-autoprefixer');
-
-  // gulp.task('sass', function () {
-  //   return gulp.src(config.src)
-  //     .pipe(sourcemaps.init())
-  //     .pipe(sass(config.settings))
-  //     .on('error', handleErrors)
-  //     .pipe(sourcemaps.write())
-  //     .pipe(autoprefixer({ browsers: ['last 2 version'] }))
-  //     .pipe(gulp.dest(config.dest))
-  //     .pipe(browserSync.reload({stream:true}));
-  // });
+gulp.task('sass', function () {
+  return gulp.src(config.client.src.scss + '/**/*.scss')
+    .pipe(sourcemaps.init())
+    .pipe(sass({
+        // indentedSyntax: true, // Enable .sass syntax!
+        // imagePath: 'images' // Used by the image-url helper
+    }))
+    .pipe(plumber({
+        errorHandler: alertError
+    }))
+    .pipe(autoprefixer({ browsers: ['last 2 version'] }))
+    .pipe(sourcemaps.write('.'))
+    .pipe(gulp.dest(config.client.build.css))
+});
 
 // ------------------------------------------------------------------------------
 // Build
@@ -127,6 +126,7 @@ gulp.task ('watch', function (cb) {
 
     gulp.watch(config.client.build.root + '/**').on('change', browserSync.reload);
     gulp.watch(config.client.src.ts + '/**.ts', ['typescript']);
+    gulp.watch(config.client.src.sass + '/**.sass', ['sass']);
 });
 
 // ------------------------------------------------------------------------------

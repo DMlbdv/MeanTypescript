@@ -2,11 +2,13 @@
     "client": {
         "src":{
             "ts": "client/src/ts",
-            "jade": "client/src/jade"
+            "jade": "client/src/jade",
+            "scss": "client/src/scss"
         },
         "build": {
             "root": "client/build",
-            "js": "client/build/js"
+            "js": "client/build/js",
+            "css": "client/build/css"
         }
     }
 }
